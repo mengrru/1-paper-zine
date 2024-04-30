@@ -1,0 +1,176 @@
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1 pager zine</title>
+
+    <style>
+body {
+  margin: 0
+}
+.item {
+  background-color: #eee;
+  color: #ccc;
+  position: relative;
+}
+.item span {
+  font-size: 3em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.item img {
+  max-width: 100%;
+  max-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+    </style>
+  </head>
+  <body>
+    <div id="config-panel" style="display: none">
+      <input type="file" id="files" name="files" multiple>
+      <button id="fourteen-button">14 pages</button>
+      <button id="eight-button">8 pages</button>
+      <button id="zoom-in-button">+</button>
+      <button id="zoom-out-button">-</button>
+    </div>
+
+    <div id="previewer">
+    </div>
+
+    <script>
+      const $files = document.querySelector("#files");
+      const $configPanel = document.querySelector("#config-panel");
+      const $fourteenButton = document.querySelector("#fourteen-button");
+      const $eightButton = document.querySelector("#eight-button");
+      const $zoomInButton = document.querySelector("#zoom-in-button");
+      const $zoomOutButton = document.querySelector("#zoom-out-button");
+      const $previewer = document.querySelector("#previewer");
+
+      const encodeImageFileAsURL = (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        return new Promise((resolve, reject) => {
+          reader.onloadend = () => {
+            resolve(reader.result);
+          }
+        });
+      };
+
+      /*
+      let images = [];
+
+      $files.addEventListener("change", (event) => {
+        const imageFiles = event.target.files;
+        Promise.all(Array.from(imageFiles).map(file => encodeImageFileAsURL(file)))
+          .then(res => {
+            images = res;
+            renderToPreviewer(FourteenPages, images);
+          });
+      });
+      */
+
+      const WIDTH = 210;
+      const HEIGHT = 297;
+      const BASE = 4;
+
+      let Padding = 1.5;
+      let Polyline = true;
+
+      const FourteenPages = [
+        ["BACK COVER", "FRONT COVER", "1", "2"],
+        ["6", "5", "4", "3"],
+        ["7", "8", "9", "10"],
+        ["", "", "12", "11"]
+      ];
+
+      const EightPages = [
+        []
+      ];
+
+      const renderToPreviewer = (config, imageURLs) => {
+        const paper = `<div class="paper" style="
+          display: grid;
+          grid-template-columns: repeat(${config[0].length}, 1fr);
+          grid-row-gap: ${BASE * Padding * 2}px;
+          grid-column-gap: ${BASE * Padding * 2}px;
+          padding: ${BASE * Padding}px;
+          width: ${BASE * WIDTH}px;
+          height: ${BASE * HEIGHT}px;
+          box-sizing: border-box;
+        ">${
+          config.map((row, rowIndex) => 
+            row.map(item => `
+              <div
+                class="item"
+                ${rowIndex % 2 === 1 ? `style="transform: rotate(180deg)"` : ""}
+              >
+                <span>${item}</span>
+              </div>
+            `).join("")
+          ).join("")
+        }</div>`;
+
+        $previewer.innerHTML = paper;
+
+        const $items = document.querySelectorAll(".item");
+
+        Array.from($items).forEach(($item, index) => {
+          $item.addEventListener("click", () => {
+            const $input = document.createElement('input');
+            $input.type = "file";
+            $input.onchange = (e) => {
+              const imageFile = e.target.files[0];
+              encodeImageFileAsURL(imageFile)
+                .then(imageURL => {
+                  const imageHTML = `<img src="${imageURL}" />`;
+                  const $img = document.createElement("img");
+                  let angle = 0;
+                  $img.src = imageURL;
+                  $img.oncontextmenu = (e) => {
+                    e.preventDefault();
+                    angle -= 90;
+                    const w = WIDTH - Padding * 2;
+                    const h = HEIGHT - Padding * 2;
+                    let ratio = $img.width / $img.height > w / h
+                      ? $img.width / w
+                      : $img.height / h;
+                    let scale = $img.width / $img.height > h / w
+                      ? h / ($img.width / ratio)
+                      : w / ($img.height / ratio);
+                    $img.style.transform = `rotate(${angle}deg)${angle % 180 !== 0 ? `scale(${scale})` : ""}`
+                    $img.style.transformOrigin = "50% 50%";
+                  }
+                  $item.innerHTML = "";
+                  $item.appendChild($img);
+                  $item.style.backgroundColor = "transparent";
+                });
+            }
+            $input.click();
+          });
+        });
+      }
+
+      const zoomIn = () => {};
+
+      const zoomOut = () => {};
+
+      renderToPreviewer(FourteenPages);
+
+      /*
+      document.body.addEventListener("auxclick", (e) => {
+        e.preventDefault();
+        const configPanelShown = !$configPanel.style.display || $configPanel.style.display !== "none";
+        $configPanel.style.display = configPanelShown ? "none" : "block";
+      });
+      */
+    </script>
+  </body>
+</html>
