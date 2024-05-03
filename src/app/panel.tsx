@@ -1,9 +1,14 @@
 import { useContext, useState } from "react";
 import { GlobalContext } from "./context";
 import { downloadString, openFileSelector, readStringFromFile } from "./utils";
+import { Config } from "./constant";
 
 export const Panel = () => {
-    const { previewerModel } = useContext(GlobalContext);
+    const { previewerModel: {
+        addItem, removeItem, selectItem, itemData, selectedItem,
+        setConfig, pageParam,
+        setPadding, setItemStyle
+    }, previewerModel } = useContext(GlobalContext);
     const [isShow, setShow] = useState(false);
 
     const onImport = () => {
@@ -18,28 +23,49 @@ export const Panel = () => {
 
     const onExport = () => {
         downloadString(`1-pager-zine-${Date.now()}.metadata.json`, previewerModel.export());
-    }
+    };
 
     const onAddItem = () => {
-        previewerModel.addItem();
-    }
+        selectItem(addItem());
+    };
 
     const onRemoveItem = () => {
-    }
+        removeItem(selectedItem);
+    };
+
+    const onSwitch = () => {
+        if (pageParam.type === "14") {
+            setConfig(Config[8]);
+        } else {
+            setConfig(Config[14]);
+        }
+    };
 
     return <div className="panel"
         style={{ opacity: isShow ? 1 : 0 }}
         onMouseOver={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
     >
-        <button onClick={onImport}>import</button>
-        <button onClick={onExport}>export</button>
-        <button onClick={onAddItem}>+ item</button>
-        <button onClick={onRemoveItem}>- item</button>
+        <button onClick={onSwitch}>Switch to { pageParam.type === "14" ? "8" : "14"}</button>
+        <div className="panel-row">
+            <button onClick={onImport}>Import</button>
+            <button onClick={onExport}>Export</button>
+        </div>
+        <div className="panel-row">
+            <button onClick={onAddItem}>+ Item</button>
+            <button onClick={onRemoveItem}>- Item</button>
+        </div>
+        <div className="panel-row">
+            <button onClick={() => setPadding(pageParam.Padding + 0.5)}>+ Padding</button>
+            <button onClick={() =>
+                pageParam.Padding > 0 && setPadding(pageParam.Padding - 0.5)
+            }>- Padding</button>
+        </div>
+        <button onClick={() => selectItem("")}>Clear focus</button>
         <textarea
             onChange={(e) => {
-                previewerModel.setItemStyle(previewerModel.selectedItem, e.target.value);
+                setItemStyle(selectedItem, e.target.value);
             }}
-            value={previewerModel.itemData[previewerModel.selectedItem]?.style} />
+            value={selectedItem === "" ? "" : itemData[selectedItem]?.style} />
     </div>
 };

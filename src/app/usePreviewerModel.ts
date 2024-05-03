@@ -23,15 +23,30 @@ export const usePreviewerModel = () => {
         rowNum: pageParam.LayoutConfig.length,
         colNum: pageParam.LayoutConfig[0].length,
 
+        setPadding (value: number) {
+            setPageParam(prev => {
+                prev.Padding = value;
+                return { ...prev };
+            });
+        },
+
+        setConfig (config: PreviewerModel["pageParam"]) {
+            setPageParam(() => {
+                return { ...config };
+            });
+        },
+
         selectItem (id: string) {
             setSelectedItem(id);
         },
 
         addItem () {
+            const id = generateId();
             setItemData(prev => {
-                prev[generateId()] = { style: "" };
+                prev[id] = { style: "" };
                 return { ...prev };
             });
+            return id;
         },
 
         removeItem (id: string) {

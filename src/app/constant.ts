@@ -1,4 +1,5 @@
 export const FourteenPages = {
+    type: "14" as LayoutType,
     LayoutConfig: [
         ["BACK COVER", "FRONT COVER", "1", "2"],
         ["6", "5", "4", "3"],
@@ -13,6 +14,7 @@ export const FourteenPages = {
 };
 
 export const EightPages = {
+    type: "8" as LayoutType,
     LayoutConfig: [
         ["FRONT COVER", "BACK COVER", "7", "6"],
         ["2", "3", "4", "5"]
@@ -25,3 +27,10 @@ export const EightPages = {
 };
 
 export const DefaultPageParam = EightPages;
+
+export type LayoutType = "14" | "8"
+
+export const Config = {
+    "14": FourteenPages,
+    "8": EightPages
+}
