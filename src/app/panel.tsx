@@ -7,7 +7,8 @@ export const Panel = () => {
     const { previewerModel: {
         addItem, removeItem, selectItem, itemData, selectedItem,
         setConfig, pageParam,
-        setPadding, setItemStyle
+        setPadding, setItemStyle,
+        isPrintMode, setPrintMode
     }, previewerModel } = useContext(GlobalContext);
     const [isShow, setShow] = useState(false);
 
@@ -41,6 +42,11 @@ export const Panel = () => {
         }
     };
 
+    const onPrintMode = () => {
+        selectItem("");
+        setPrintMode(!isPrintMode);
+    };
+
     return <div className="panel"
         style={{ opacity: isShow ? 1 : 0 }}
         onMouseOver={() => setShow(true)}
@@ -61,7 +67,7 @@ export const Panel = () => {
                 pageParam.Padding > 0 && setPadding(pageParam.Padding - 0.5)
             }>- Padding</button>
         </div>
-        <button onClick={() => selectItem("")}>Clear focus</button>
+        <button onClick={onPrintMode}>Print mode: { isPrintMode ? "On" : "Off" }</button>
         <textarea
             onChange={(e) => {
                 setItemStyle(selectedItem, e.target.value);

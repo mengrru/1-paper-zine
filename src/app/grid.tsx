@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const Grid = ({ isFlip, text, index }: Props) => {
-    const { previewerModel: { rowNum, colNum, pageParam: { WIDTH, HEIGHT, Padding } }, previewerModel } = useContext(GlobalContext);
+    const { previewerModel: { rowNum, colNum, isPrintMode, pageParam: { WIDTH, HEIGHT, Padding } }, previewerModel } = useContext(GlobalContext);
 
     const imageURL = useMemo(() => {
         if (!previewerModel.gridData[index]) {
@@ -57,16 +57,16 @@ export const Grid = ({ isFlip, text, index }: Props) => {
     }, [imageRotateAngle]);
 
     return <div
-        className={`grid ${imageURL !== "" && "transparentBg"}`}
+        className={`grid ${(imageURL !== "" || isPrintMode) && "transparentBg"}`}
         style={isFlip
             ? { transform: isFlip ? "rotate(180deg)" : "" }
             : {}
         }
         onClick={onClickHandler}
     >
-        { imageURL === ""
-            ? <span>{text}</span>
-            : <img
+        <span className={(imageURL !== "" || isPrintMode) ? "opacity-0" : ""}>{text}</span>
+        { imageURL !== ""
+            && <img
                 ref={$image}
                 src={imageURL}
                 onContextMenu={onContextMenuHandler} />

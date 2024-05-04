@@ -13,15 +13,19 @@ export const usePreviewerModel = () => {
     const [gridData, setGridData] = useState<PreviewerModel["gridData"]>([]);
     const [itemData, setItemData] = useState<PreviewerModel["itemData"]>({});
     const [selectedItem, setSelectedItem] = useState("");
+    const [isPrintMode, setPrintMode] = useState(false);
 
     return {
         pageParam,
         gridData,
         itemData,
         selectedItem,
+        isPrintMode,
 
         rowNum: pageParam.LayoutConfig.length,
         colNum: pageParam.LayoutConfig[0].length,
+
+        setPrintMode,
 
         setPadding (value: number) {
             setPageParam(prev => {
