@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    basePath: "/1-pager-zine",
+    basePath: "/1-paper-zine",
     output: "export",
     reactStrictMode: true
 };

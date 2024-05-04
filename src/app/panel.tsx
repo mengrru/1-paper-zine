@@ -22,7 +22,7 @@ export const Panel = () => {
     };
 
     const onExport = () => {
-        downloadString(`1-pager-zine-${Date.now()}.metadata.json`, previewerModel.export());
+        downloadString(`1-paper-zine-${Date.now()}.metadata.json`, previewerModel.export());
     };
 
     const onAddItem = () => {

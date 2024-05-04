@@ -1,1 +1,1 @@
-# 1 pager zine
+# 1 paper zine
