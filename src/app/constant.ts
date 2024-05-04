@@ -16,8 +16,8 @@ export const FourteenPages = {
 export const EightPages = {
     type: "8" as LayoutType,
     LayoutConfig: [
-        ["FRONT COVER", "BACK COVER", "7", "6"],
-        ["2", "3", "4", "5"]
+        ["BACK COVER", "FRONT COVER", "1", "2"],
+        ["6", "5", "4", "3"]
     ],
     WIDTH: 297,
     HEIGHT: 210,
